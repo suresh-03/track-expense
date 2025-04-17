@@ -1,0 +1,53 @@
+<?php
+
+
+class Model{
+
+	protected $table;
+	protected $conn;
+
+	public function __construct(){
+		$this->conn = $this->connect();
+	}
+
+
+	private function connect(){
+		  
+		try {
+		  return new PDO("mysql:host=".DB_HOST.";dbname=".DB_NAME,DB_USER,DB_PASSWORD,[
+		  		PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+		  		PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+		  ]);
+		}
+		catch(PDOException $pe){
+			die("DB Connection Failed ".$pe->getMessage());
+		}
+	}
+
+
+	protected function getAll(){
+
+		$sql = 'SELECT * FROM `'.$this->table.'`';
+		$stmt = $this->conn->prepare($sql);
+		$result = $stmt->execute();
+
+		return $stmt->fetchAll();
+	}
+
+	protected function getById($idName,$id){
+		$sql = 'SELECT * FROM `'.$this->table.'` WHERE :idName = :id';
+		$stmt = $this->conn->prepare($sql);
+		$stmt->execute([':idName' => $idName, 'id' => $id]);
+
+		return $stmt->fetch();
+	}
+
+	protected function insert($columns){
+		$keys = array_keys($columns);
+		$values = array_values($columns);
+
+		$sql = 'INSERT INTO `'.$this->table.'` (:'.implode(':,', $keys).') VALUES ('.implode(',',$values).')';
+		$stmt = $this->conn->prepare($sql);
+		return $stmt->execute($columns);
+	}
+}
