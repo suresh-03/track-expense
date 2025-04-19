@@ -35,7 +35,7 @@ class AuthController extends Controller{
 		$response = [];
 
 		$user = $this->model->userExists('EMAIL',$email);
-		error_log(print_r($user,true));
+		// error_log(print_r($user,true));
 
 		if(is_array($user) && count($user) > 0){
 			$response['status'] = 'error';
@@ -59,7 +59,32 @@ class AuthController extends Controller{
 	}
 
 	private function handleSigninRequest($method){
+		$email = $method['email'];
+		$password = $method['password'];
 
+		$response = [];
+
+		$user = $this->model->userExists('EMAIL',$email);
+
+		if(!is_array($user)){
+			$response['status'] = 'error';
+			$response['message'] = 'user not exists';
+		}
+		else{
+			if(password_verify($password, $user['PASSWORD'])){
+				$response['status'] = 'success';
+				$response['message'] = 'user signed in successfully';
+				$_SESSION['user_id'] = $user['ID'];
+				$_SESSION['user_email'] = $user['EMAIL'];
+				$response['redirect'] = ROOT.'public/home';
+			}
+			else{
+				$response['status'] = 'error';
+				$response['message'] = 'invalid password';
+			}
+		}
+
+		$this->sendJsonResponse($response);
 	}
 
 	public function signup(){
