@@ -3,11 +3,12 @@
 
 class UserController extends Controller{
 
-	public function __construct($modelName){
-		$this->model = $this->getModel($modelName);
+	public function __construct(){
+		$this->model = $this->getModel('UserModel');
 	}
 
 	public function getAllUsers($params = []){
+		if($this->isApiRequest()){
 		$result = $this->model->getAllUsers();
 		if($result){
 			$result['params'] = $params;
@@ -18,9 +19,12 @@ class UserController extends Controller{
 			$this->sendJsonResponse(['status' => 'error','message' => 'unable to fetch data']);
 		}
 	}
-
-	public function showUsers(){
+	else{
 		$data['title'] = 'Users';
 		$this->view('user/show',$data);
 	}
+	}
+
+
+
 }

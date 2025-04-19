@@ -13,4 +13,12 @@ class UserModel extends Model{
 	public function getAllUsers(){
 		return $this->getAll();
 	}
+
+	public function userExists($idKey,$idValue){
+		return $this->getById($idKey,$idValue);
+	}
+
+	public function insertUsers($data){
+		return $this->insert($data);
+	}
 }

@@ -11,4 +11,5 @@ if($host == 'localhost' || $host == '127.0.0.1'){
 	define('DB_USER','root');
 	define('DB_PASSWORD','');
 	define('DB_NAME','track_expense');
+	define('APP_NAME','Track Expense');
 }

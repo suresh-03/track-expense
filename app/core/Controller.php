@@ -12,7 +12,7 @@ class Controller{
 			extract($data);
 		}
 
-		$viewPath = APP_ROOT.'/app/views/'.$viewName.'.view.php';
+		$viewPath = APP_ROOT.'app/views/'.$viewName.'.view.php';
 
 		if(file_exists($viewPath)){
 			require_once $viewPath;
@@ -40,6 +40,13 @@ class Controller{
 		else{
 			die($modelPath." not found");
 		}
+	}
+
+	protected function isApiRequest(){
+		$url = $_GET['url'];
+		$url = explode('/', filter_var(rtrim($url, '/'), FILTER_SANITIZE_URL));
+
+		return $url[0] == 'api';
 	}
 
 }

@@ -12,7 +12,7 @@
 
 	<script src="<?=ROOT?>public/assets/js/main.js"></script>
 	<script type="text/javascript">
-		fetchData('<?=ROOT?>public/user/getAllUsers');
+		fetchData('<?=ROOT?>public/api/user/getAllUsers');
 	</script>
 </body>
 </html>

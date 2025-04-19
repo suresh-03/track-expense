@@ -7,15 +7,17 @@ class Router{
 		$url = $_GET['url'] ?? 'home/index';
 		$url = explode('/', filter_var(rtrim($url, '/'), FILTER_SANITIZE_URL));
 
-		$controllerName = ucfirst($url[0])."Controller";
-		$methodName = $url[1] ?? 'index';
-		$params = array_slice($url, 2);
+	
+		$controllerName = $url[0] == 'api' ? ucfirst($url[1])."Controller" : ucfirst($url[0])."Controller";
+		$methodName = $url[0] == 'api' ? $url[2] ?? 'index' : $url[1] ?? 'index';
+		$params = $url[0] == 'api' ? array_slice($url, 3) : array_slice($url, 2);
+		
 
 		$controllerPath = APP_ROOT."app/controllers/".$controllerName.".php";
 
 		if(file_exists($controllerPath)){
 			require_once $controllerPath;
-			$controller = new $controllerName(ucfirst($url[0]).'Model');
+			$controller = new $controllerName();
 
 			if(method_exists($controller, $methodName)){
 				call_user_func_array([$controller,$methodName], array_merge($params,[$_GET]));

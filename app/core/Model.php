@@ -34,19 +34,20 @@ class Model{
 		return $stmt->fetchAll();
 	}
 
-	protected function getById($idName,$id){
-		$sql = 'SELECT * FROM `'.$this->table.'` WHERE :idName = :id';
+	protected function getById($idKey,$idValue){
+		$sql = 'SELECT * FROM `'.$this->table.'` WHERE '.$idKey.' = :'.$idKey;
 		$stmt = $this->conn->prepare($sql);
-		$stmt->execute([':idName' => $idName, 'id' => $id]);
-
+		$stmt->execute([$idKey => $idValue]);
 		return $stmt->fetch();
+
 	}
 
 	protected function insert($columns){
 		$keys = array_keys($columns);
 		$values = array_values($columns);
 
-		$sql = 'INSERT INTO `'.$this->table.'` (:'.implode(':,', $keys).') VALUES ('.implode(',',$values).')';
+		$sql = 'INSERT INTO `'.$this->table.'` ('.implode(',', $keys).') VALUES (:'.implode(',:',$keys).')';
+		error_log($sql);
 		$stmt = $this->conn->prepare($sql);
 		return $stmt->execute($columns);
 	}
