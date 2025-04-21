@@ -12,7 +12,6 @@ class AuthController extends Controller{
 		$action = $_POST['action'] ?? $_GET['action'];
 		$method = $_POST ?? $_GET;
 
-
 		switch ($action) {
 			case 'signup':
 				$this->handleSignupRequest($method);
@@ -23,6 +22,7 @@ class AuthController extends Controller{
 				break;
 
 			case 'signout':
+				$this->handleSignoutRequest();
 				break;
 		}
 	}
@@ -74,8 +74,8 @@ class AuthController extends Controller{
 			if(password_verify($password, $user['PASSWORD'])){
 				$response['status'] = 'success';
 				$response['message'] = 'user signed in successfully';
-				$_SESSION['user_id'] = $user['ID'];
-				$_SESSION['user_email'] = $user['EMAIL'];
+				$_SESSION['USER_ID'] = $user['ID'];
+				$_SESSION['USER_EMAIL'] = $user['EMAIL'];
 				$response['redirect'] = ROOT.'public/home';
 			}
 			else{
@@ -95,6 +95,14 @@ class AuthController extends Controller{
 	public function signin(){
 		$data['title'] = 'Signin';
 		$this->view('auth/signin',$data);
+	}
+
+	private function handleSignoutRequest(){
+		session_unset();
+		session_destroy();
+		$response['status'] = 'success';
+		$response['redirect'] = ROOT.'public/home';
+		$this->sendJsonResponse($response);
 	}
 
 }
