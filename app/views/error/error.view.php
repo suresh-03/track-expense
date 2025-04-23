@@ -18,13 +18,7 @@
 </head>
 <body>
 	<div class='error-page'>
-	<?php if(isset($data['method']) && isset($data['controller'])):?>
-	<h1><?php echo $data['method']?> not found in <?php echo $data['controller']?></h1>
-	<?php elseif(isset($data['controller'])): ?>
-	<h1><?php echo $data['controller']?> not found</h1>
-	<?php elseif(isset($data['view'])):?>
-	<h1><?php echo $data['view']?> not found</h1>
-	<?php endif;?>
+		<h1>Page Not Found</h1>
 	</div>
 </body>
 </html>

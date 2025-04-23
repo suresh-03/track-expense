@@ -8,7 +8,7 @@
 </head>
 <body>
 	<div id="error-msg"></div>
-	<form id="add-expense-form">
+	<form id="add-expense-form" method="post">
 		<label for="category">Expense Category</label><br>
 		<select name="category" id="category" required>
 			<option value="food">Food</option>
@@ -38,7 +38,7 @@
 	</form>
 
 	<script type="text/javascript">
-		handleAddExpense('<?=ROOT?>public/expense/handleExpenseRequest');
+		handleAddExpense('<?=ROOT?>public/api/expense/handleExpenseRequest','<?=API_KEY?>');
 	</script>
 </body>
 </html>

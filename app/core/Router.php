@@ -24,15 +24,12 @@ class Router{
 			}
 			else{
 				http_response_code(404);
-				$data['controller'] = $controllerName;
-				$data['method'] = $methodName;
 				$data['title'] = '404 - Page Not Found';
 				require_once '../app/views/error/error.view.php';
 			}
 		}
 		else{
 			http_response_code(404);
-			$data['controller'] = $controllerPath;
 			$data['title'] = '404 - Page Not Found';
 			require_once '../app/views/error/error.view.php';
 		}

@@ -1,6 +1,6 @@
 
 
-function handleSignup(api){
+function handleSignup(api,apiKey){
 
 	const form = document.getElementById('signup-form');
 
@@ -33,9 +33,20 @@ function handleSignup(api){
 
 		const formData = new FormData(form);
 		formData.append('action','signup');
+
+		const plainData = {};
+
+		formData.forEach((value,key) => {
+			plainData[key] = value;
+		});
+
 		fetch(api,{
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': 'Bearer '+apiKey
+			},
 			method: 'POST',
-			body: formData
+			body: JSON.stringify(plainData)
 		})
 		.then(response => response.json())
 		.then(data => {

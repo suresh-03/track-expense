@@ -1,5 +1,5 @@
 
-function handleSignout(api){
+function handleSignout(api,apiKey){
 
 	const form = document.getElementById('signout-form');
 	form.addEventListener('submit',  (event) => {
@@ -9,9 +9,19 @@ function handleSignout(api){
 		const formData = new FormData(form);
 		formData.append('action','signout');
 
+		const plainData = {};
+
+		formData.forEach((value,key) => {
+			plainData[key] = value;
+		});
+
 		fetch(api,{
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': 'Bearer '+apiKey
+			},
 			method: 'POST',
-			body: formData
+			body: JSON.stringify(plainData)
 		})
 		.then(response => response.json())
 		.then(data => {

@@ -9,7 +9,7 @@
 <body>
 
 	<div id="error-msg"></div>
-	<form id="signup-form">
+	<form id="signup-form" method="post">
 		<label for="username">Username</label>
 		<input type="text" name="username" id="username" required>
 		<br>
@@ -24,7 +24,7 @@
 
 
 	<script type="text/javascript">
-		handleSignup('<?=ROOT?>public/api/auth/handleApiRequest');
+		handleSignup('<?=ROOT?>public/api/auth/handleAuthRequest','<?=API_KEY?>');
 	</script>
 </body>
 </html>

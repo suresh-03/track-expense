@@ -7,18 +7,16 @@ class AuthController extends Controller{
 		$this->model = $this->getModel('UserModel');
 	}
 
-	public function handleApiRequest(){
+	public function handleAuthRequest(){
 		
-		$action = $_POST['action'] ?? $_GET['action'];
-		$method = $_POST ?? $_GET;
-
-		switch ($action) {
+		$input = $this->verifyAndGetInput();
+		switch ($input['action']) {
 			case 'signup':
-				$this->handleSignupRequest($method);
+				$this->handleSignupRequest($input);
 				break;
 			
 			case 'signin':
-				$this->handleSigninRequest($method);
+				$this->handleSigninRequest($input);
 				break;
 
 			case 'signout':

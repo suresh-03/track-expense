@@ -42,11 +42,29 @@ class Controller{
 		}
 	}
 
-	protected function isApiRequest(){
-		$url = $_GET['url'];
-		$url = explode('/', filter_var(rtrim($url, '/'), FILTER_SANITIZE_URL));
+	protected function useCustomHeaders(){	
+		header("Access-Control-Allow-Origin: *");  // Allow all origins (or restrict to specific origins)
+		header("Access-Control-Allow-Headers: Authorization, Content-Type");  // Allow specific headers
+		header("Content-Type: application/json");
+	}
 
-		return $url[0] == 'api';
+	protected function verifyAndGetInput(){
+		$this->useCustomHeaders();
+
+		$headers = getallheaders();
+
+		error_log(print_r(getallheaders(),true));
+
+		if(!array_key_exists('Authorization',$headers) || $headers['Authorization'] !== 'Bearer '.API_KEY){
+			$response['status'] = 'error';
+			$response['message'] = 'UnAuthorized Access';
+			$this->sendJsonResponse($response);
+		}
+
+		$input = json_decode(file_get_contents("php://input"), true);
+
+		error_log(print_r($input,true));
+		return $input;
 	}
 
 }

@@ -9,7 +9,7 @@
 <body>
 	<?php if(empty($_SESSION)): ?>
 	<div id="error-msg"></div>
-	<form id="signin-form">
+	<form id="signin-form" method="post">
 		<label for="email">Email</label>
 		<input type="email" name="email" id="email" required>
 		<br>
@@ -19,8 +19,10 @@
 		<button type="submit">Signin</button>
 	</form>
 	<script type="text/javascript">
-		handleSignin('<?=ROOT?>public/api/auth/handleApiRequest');
+		handleSignin('<?=ROOT?>public/api/auth/handleAuthRequest','<?=API_KEY?>');
 	</script>
+	<?php else: ?>
+		<h1>User already Signed In!</h1>
 	<?php endif; ?>
 </body>
 </html>

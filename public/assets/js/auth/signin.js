@@ -1,5 +1,5 @@
 
-function handleSignin(api){
+function handleSignin(api,apiKey){
 
 	const form = document.getElementById('signin-form');
 
@@ -19,9 +19,20 @@ function handleSignin(api){
 		const formData = new FormData(form);
 		formData.append('action','signin');
 
+		plainData = {};
+
+		formData.forEach((value,key) => {
+			plainData[key] = value;
+		});
+
 		fetch(api,{
+			headers: {
+				'Content-Type':'application/json',
+				'Authorization': 'Bearer '+apiKey
+			},
 			method: 'POST',
-			body: formData
+			body: JSON.stringify(plainData)
+			
 		})
 		.then(response => response.json())
 		.then(data => {

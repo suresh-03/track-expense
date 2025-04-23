@@ -12,13 +12,13 @@ class ExpenseController extends Controller{
 	public function handleExpenseRequest(){
 
 		if(!empty($_SESSION)){
-		$action = $_POST['action'] ?? $_GET['action'];
-		$method = $_POST ?? $_GET;
+		
+		$input = $this->verifyAndGetInput();
 
-		switch($action){
+		switch($input['action']){
 
 			case 'addExpense':
-				$this->handleAddExpenseRequest($method);
+				$this->handleAddExpenseRequest($input);
 				break;
 		}
 		}
@@ -48,14 +48,14 @@ class ExpenseController extends Controller{
 		$paymentMethodController = new PaymentMethodController;
 
 		if(!$categoryController->insertCategory(['USER_ID' => $userId,'NAME' => $category, 'TYPE' => 'expense'])){
-			$response['status'] = 'error';
-			$response['message'] = 'category is not added';
-			$this->sendJsonResponse($response);
+			// $response['status'] = 'error';
+			// $response['message'] = 'category is not added';
+			// $this->sendJsonResponse($response);
 		}
 		if(!$paymentMethodController->insertPaymentMethod(['USER_ID' => $userId,'NAME' => $paymentMethod])){
-			$response['status'] = 'error';
-			$response['message'] = 'payment method is not added';
-			$this->sendJsonResponse($response);
+			// $response['status'] = 'error';
+			// $response['message'] = 'payment method is not added';
+			// $this->sendJsonResponse($response);
 		}
 
 		$categoryId = $categoryController->getCategoryId($userId);

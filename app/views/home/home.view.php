@@ -8,11 +8,11 @@
 </head>
 <body>
 	<?php if(!empty($_SESSION)): ?>
-	<form id="signout-form"><button type="submit">Signout</button></form>
+	<form id="signout-form" method="post"><button type="submit">Signout</button></form>
 	<br>
 	<a href="<?=ROOT?>public/expense/addExpense">Add Expense</a>
 	<script type="text/javascript">
-		handleSignout('<?=ROOT?>public/auth/handleApiRequest');
+		handleSignout('<?=ROOT?>public/api/auth/handleAuthRequest','<?=API_KEY?>');
 	</script>
 	<?php endif; ?>
 </body>

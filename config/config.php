@@ -12,4 +12,6 @@ if($host == 'localhost' || $host == '127.0.0.1'){
 	define('DB_PASSWORD','');
 	define('DB_NAME','track_expense');
 	define('APP_NAME','Track Expense');
+	define('PUBLIC_URL','/track-expense/public/');
+	define('API_KEY','kahsdfjh98y3tnkajfajksndgkjar9e8ty2p&^gj4()*ptgv^&sdhaskg}{}|:"?,>,h30248ytpsgsiugbjn3480ty143tdifsuvbsie');
 }
