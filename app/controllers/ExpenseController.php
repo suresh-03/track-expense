@@ -20,10 +20,14 @@ class ExpenseController extends Controller{
 			case 'addExpense':
 				$this->handleAddExpenseRequest($input);
 				break;
+
+			case 'index':
+				$this->handleShowExpenseRequest();
+				break;
 		}
 		}
 		else{
-			$this->sendJsonResponse(['error' => 'UnAuthorized Access']);
+			$this->sendJsonResponse(['status' => 'error','message' => 'User not signed in. Please signin to access this feature']);
 		}	
 	}
 
@@ -33,7 +37,7 @@ class ExpenseController extends Controller{
 			$this->view('expense/add.expense',$data);
 		}
 		else{
-			$this->sendJsonResponse(['error' => 'UnAuthorized Access']);
+			$this->sendJsonResponse(['status' => 'error','message' => 'UnAuthorized Access']);
 		}
 	}
 
@@ -43,31 +47,22 @@ class ExpenseController extends Controller{
 		$userId = $_SESSION['USER_ID'];
 		$category = $method['category'];
 		$paymentMethod = $method['paymentMethod'];
-
-		$categoryController = new CategoryController;
-		$paymentMethodController = new PaymentMethodController;
-
-		if(!$categoryController->insertCategory(['USER_ID' => $userId,'NAME' => $category, 'TYPE' => 'expense'])){
-			// $response['status'] = 'error';
-			// $response['message'] = 'category is not added';
-			// $this->sendJsonResponse($response);
-		}
-		if(!$paymentMethodController->insertPaymentMethod(['USER_ID' => $userId,'NAME' => $paymentMethod])){
-			// $response['status'] = 'error';
-			// $response['message'] = 'payment method is not added';
-			// $this->sendJsonResponse($response);
-		}
-
-		$categoryId = $categoryController->getCategoryId($userId);
-		$paymentMethodId = $paymentMethodController->getPaymentMethodId($userId);
-
 		$amount = $method['amount'];
 		$description = $method['description'];
 		$expenseDate = $method['expenseDate'];
 
-	
+		$categoryController = new CategoryController;
+		$paymentMethodController = new PaymentMethodController;
+
+		$categoryController->insertCategory(['USER_ID' => $userId,'NAME' => $category, 'TYPE' => 'expense']);
+		$paymentMethodController->insertPaymentMethod(['USER_ID' => $userId,'NAME' => $paymentMethod]);
+
+		$categoryId = $categoryController->getCategoryId($userId);
+		$paymentMethodId = $paymentMethodController->getPaymentMethodId($userId);
+
 
 		$columns = ['USER_ID' => $userId,'CATEGORY_ID' => $categoryId['ID'], 'PAYMENT_METHOD_ID' => $paymentMethodId['ID'], 'AMOUNT' => $amount, 'DESCRIPTION' => $description, 'EXPENSE_DATE' => $expenseDate];
+
 
 		if($this->model->insertExpenses($columns)){
 			$response['status'] = 'success';
@@ -75,9 +70,38 @@ class ExpenseController extends Controller{
 		}
 		else{
 			$response['status'] = 'error';
-			$response['message'] = 'expense not added';
+			$response['message'] = 'expense already exists';
 		}
 
 		$this->sendJsonResponse($response);
 	}
+
+	public function index(){
+		if(!empty($_SESSION)){
+			$data['title'] = 'Expenses';
+			$this->view('expense/show.expense',$data);
+		}
+		else{
+			$this->sendJsonResponse(['status' => 'error','message' => 'UnAuthorized Access']);
+		}
+	}
+
+	private function handleShowExpenseRequest(){
+		$response = [];
+
+		$result = $this->model->getExpenses($_SESSION['USER_ID']);
+
+		if(is_array($result) && count($result) > 0){
+			$response['status'] = 'success';
+			$response['result'] = $result;
+			$this->sendJsonResponse($response);
+		}
+		else{
+			$response['status'] = 'error';
+			$response['message'] = 'unable to fetch expenses';
+			$this->sendJsonResponse($response);
+		}
+	}
+
+	
 }
