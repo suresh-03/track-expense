@@ -18,11 +18,17 @@ class ExpenseModel extends Model{
 	}
 
 	public function getExpenses($userId){
-		$sql = "SELECT c.NAME AS CATEGORY,c.TYPE,p.NAME AS PAYMENT_METHOD,e.AMOUNT,e.DESCRIPTION,e.EXPENSE_DATE FROM ".$this->table." AS e JOIN Categories AS c ON c.ID = e.CATEGORY_ID JOIN PaymentMethods AS p ON p.ID = e.PAYMENT_METHOD_ID WHERE e.USER_ID = :USER_ID";
+		$sql = "SELECT e.ID AS EXPENSE_ID,c.NAME AS CATEGORY,c.TYPE,p.NAME AS PAYMENT_METHOD,e.AMOUNT,e.DESCRIPTION,e.EXPENSE_DATE FROM ".$this->table." AS e JOIN Categories AS c ON c.ID = e.CATEGORY_ID JOIN PaymentMethods AS p ON p.ID = e.PAYMENT_METHOD_ID WHERE e.USER_ID = :USER_ID";
 
 		$stmt = $this->conn->prepare($sql);
 		$stmt->execute(['USER_ID' => $userId]);
 		return $stmt->fetchAll();
+	}
+
+	public function deleteExpense($expenseId){
+		$sql = "DELETE FROM ".$this->table." WHERE ID = :ID";
+		$stmt = $this->conn->prepare($sql);
+		return $stmt->execute(["ID" => $expenseId]);
 	}
 
 

@@ -24,6 +24,10 @@ class ExpenseController extends Controller{
 			case 'index':
 				$this->handleShowExpenseRequest();
 				break;
+
+			case 'deleteExpense':
+				$this->handleDeleteExpenseRequest($input);
+				break;
 		}
 		}
 		else{
@@ -101,6 +105,25 @@ class ExpenseController extends Controller{
 			$response['message'] = 'unable to fetch expenses';
 			$this->sendJsonResponse($response);
 		}
+	}
+
+	private function handleDeleteExpenseRequest($input){
+
+		$response = [];
+
+		$expenseId = $input['expenseId'];
+
+		if($this->model->deleteExpense($expenseId)){
+			$response['status'] = 'success';
+			$response['message'] = 'expense deleted successfully';
+			$this->sendJsonResponse($response);
+		}
+		else{
+			$response['status'] = 'error';
+			$response['message'] = 'unable to delete expense';
+			$this->sendJsonResponse($response);
+		}
+
 	}
 
 	

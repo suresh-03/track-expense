@@ -38,7 +38,7 @@ class Model{
 		$sql = 'SELECT * FROM `'.$this->table.'` WHERE '.$idKey.' = :'.$idKey;
 		$stmt = $this->conn->prepare($sql);
 		$stmt->execute([$idKey => $idValue]);
-		return $stmt->fetchAll();
+		return $stmt->fetch();
 
 	}
 

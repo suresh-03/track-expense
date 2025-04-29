@@ -1,11 +1,15 @@
-function handleShowExpense(api,apiKey){
+function handleShowDeleteExpense(api,apiKey,action,expenseId = null){
 
 	const errorMsg = document.getElementById('error-msg');
 
 	errorMsg.textContent = '';
 
 	const input = {
-		action: 'index'
+		action	
+	}
+
+	if(action == 'deleteExpense'){
+		input['expenseId'] = expenseId;
 	}
 
 	fetch(api,{
@@ -19,8 +23,14 @@ function handleShowExpense(api,apiKey){
 	.then(response => response.json())
 	.then(data => {
 		if(data.status == 'success'){
+			if(action == 'index'){
 			const res = data.result;
-			appendContent(res);
+			appendContent(res,api,apiKey);
+			}
+			else if(action == 'deleteExpense'){
+				errorMsg.textContent = data.message;
+				location.reload();
+			}
 		}
 		else{
 			errorMsg.textContent = data.message;
@@ -33,18 +43,35 @@ function handleShowExpense(api,apiKey){
 	});
 }
 
-function appendContent(res){
+function appendContent(res, api, apiKey) {
 	const expenseTable = document.getElementById('expense-table');
-	for(var i = 0; i < res.length; i++){
+
+	for (var i = 0; i < res.length; i++) {
 		const row = document.createElement('tr');
-		const content = '<td>'+(i+1)+'</td>'+
-						'<td>'+res[i].CATEGORY+'</td>'+
-						'<td>'+res[i].TYPE+'</td>'+
-						'<td>'+res[i].PAYMENT_METHOD+'</td>'+
-						'<td>'+res[i].AMOUNT+'</td>'+
-						'<td>'+res[i].DESCRIPTION+'</td>'+
-						'<td>'+res[i].EXPENSE_DATE+'</td>';
-		row.innerHTML = content;
+
+		// Create cells
+		row.innerHTML =
+			'<td>'+(i+1)+'</td>'+
+			'<td>'+res[i].CATEGORY+'</td>'+
+			'<td>'+res[i].TYPE+'</td>'+
+			'<td>'+res[i].PAYMENT_METHOD+'</td>'+
+			'<td>'+res[i].AMOUNT+'</td>'+
+			'<td>'+res[i].DESCRIPTION+'</td>'+
+			'<td>'+res[i].EXPENSE_DATE+'</td>';
+
+		// Create delete button
+		const deleteCell = document.createElement('td');
+		const deleteButton = document.createElement('button');
+		deleteButton.innerText = 'Delete';
+		const expenseId = res[i].EXPENSE_ID;
+		// Assign onclick function
+		deleteButton.onclick = function() {
+			handleShowDeleteExpense(api, apiKey, 'deleteExpense',expenseId);
+		};
+
+		deleteCell.appendChild(deleteButton);
+		row.appendChild(deleteCell);
+
 		expenseTable.appendChild(row);
 	}
 }
