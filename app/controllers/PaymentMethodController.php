@@ -14,4 +14,8 @@ class PaymentMethodController extends Controller{
 	public function getPaymentMethodId($userId){
 		return $this->model->getPaymentMethodId($userId);
 	}
+
+	public function getPaymentMethod($paymentMethodIdKey,$paymentMethodIdValue){
+		return $this->model->getPaymentMethod($paymentMethodIdKey,$paymentMethodIdValue);
+	}
 }

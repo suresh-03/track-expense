@@ -29,4 +29,8 @@ class PaymentMethodModel extends Model{
 		$stmt->execute(['USER_ID' => $userId,'NAME' => $name]);
 		return $stmt->fetch();
 	}
+
+	public function getPaymentMethod($paymentMethodIdKey,$paymentMethodIdValue){
+		return $this->getById($paymentMethodIdKey,$paymentMethodIdValue);
+	}
 }

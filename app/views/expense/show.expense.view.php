@@ -22,10 +22,14 @@
 		</table>
 	</div>
 	<script type="text/javascript">
-		window.onload = () => {
-			handleShowDeleteExpense('<?=ROOT?>public/api/expense/handleExpenseRequest','<?=API_KEY?>','index');
+		const apis = {
+			API: '<?=ROOT?>public/api/expense/handleExpenseRequest',
+			EDIT_FORM_URL: '<?=ROOT?>public/expense/editExpense'
 		}
-
+		window.onload = () => {
+			handleExpenseRequest(apis,'<?=API_KEY?>','index');
+		}
+		
 	</script>
 </body>
 </html>

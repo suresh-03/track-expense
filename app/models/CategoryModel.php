@@ -29,4 +29,8 @@ class CategoryModel extends Model{
 		$stmt->execute(['USER_ID' => $userId,'NAME' => $name,'TYPE' => $type]);
 		return $stmt->fetch();
 	}
+
+	public function getCategory($categoryIdKey,$categoryIdValue){
+		return $this->getById($categoryIdKey,$categoryIdValue);
+	}
 }

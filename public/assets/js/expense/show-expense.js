@@ -1,15 +1,25 @@
-function handleShowDeleteExpense(api,apiKey,action,expenseId = null){
+function handleExpenseRequest(apis,apiKey,action,data = null){
 
 	const errorMsg = document.getElementById('error-msg');
 
 	errorMsg.textContent = '';
+
+	let api = apis['API'];
 
 	const input = {
 		action	
 	}
 
 	if(action == 'deleteExpense'){
-		input['expenseId'] = expenseId;
+		if(!confirm("Are you want to delete this expense")){
+			return;
+		}
+		input['expenseId'] = data['EXPENSE_ID'];
+	}
+
+	if(action == 'editExpense'){
+		data['action'] = action;
+		input = data;
 	}
 
 	fetch(api,{
@@ -25,7 +35,7 @@ function handleShowDeleteExpense(api,apiKey,action,expenseId = null){
 		if(data.status == 'success'){
 			if(action == 'index'){
 			const res = data.result;
-			appendContent(res,api,apiKey);
+			appendContent(res,apis,apiKey);
 			}
 			else if(action == 'deleteExpense'){
 				errorMsg.textContent = data.message;
@@ -43,10 +53,10 @@ function handleShowDeleteExpense(api,apiKey,action,expenseId = null){
 	});
 }
 
-function appendContent(res, api, apiKey) {
+function appendContent(res, apis, apiKey) {
 	const expenseTable = document.getElementById('expense-table');
 
-	for (var i = 0; i < res.length; i++) {
+	for (let i = 0; i < res.length; i++) {
 		const row = document.createElement('tr');
 
 		// Create cells
@@ -63,14 +73,27 @@ function appendContent(res, api, apiKey) {
 		const deleteCell = document.createElement('td');
 		const deleteButton = document.createElement('button');
 		deleteButton.innerText = 'Delete';
+		deleteButton.id = 'delete-expense-button';
 		const expenseId = res[i].EXPENSE_ID;
 		// Assign onclick function
 		deleteButton.onclick = function() {
-			handleShowDeleteExpense(api, apiKey, 'deleteExpense',expenseId);
+			handleExpenseRequest(apis['API'], apiKey, 'deleteExpense',res[i]);
 		};
 
 		deleteCell.appendChild(deleteButton);
 		row.appendChild(deleteCell);
+
+		//Create edit button
+		const editCell = document.createElement('td');
+		const editButton = document.createElement('button');
+		editButton.innerText = 'Edit';
+
+		editButton.onclick = function(){
+			window.location.href = apis['EDIT_FORM_URL']+'/'+expenseId;
+		}
+
+		editCell.appendChild(editButton);
+		row.appendChild(editCell);
 
 		expenseTable.appendChild(row);
 	}

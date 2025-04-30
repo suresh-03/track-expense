@@ -14,4 +14,8 @@ class CategoryController extends Controller{
 	public function getCategoryId($userId){
 		return $this->model->getCategoryId($userId);
 	}
+
+	public function getCategory($categoryIdKey,$categoryIdValue){
+		return $this->model->getCategory($categoryIdKey,$categoryIdValue);
+	}
 }

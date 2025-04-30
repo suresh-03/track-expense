@@ -28,6 +28,10 @@ class ExpenseController extends Controller{
 			case 'deleteExpense':
 				$this->handleDeleteExpenseRequest($input);
 				break;
+
+			case 'editExpense':
+				$this->handleEditExpenseRequest($input);
+				break;
 		}
 		}
 		else{
@@ -116,6 +120,7 @@ class ExpenseController extends Controller{
 		if($this->model->deleteExpense($expenseId)){
 			$response['status'] = 'success';
 			$response['message'] = 'expense deleted successfully';
+			$response['redirectUrl'] = ROOT.'public/expense/index';
 			$this->sendJsonResponse($response);
 		}
 		else{
@@ -123,6 +128,30 @@ class ExpenseController extends Controller{
 			$response['message'] = 'unable to delete expense';
 			$this->sendJsonResponse($response);
 		}
+
+	}
+
+	public function editExpense($params){
+		if(!empty($_SESSION)){
+			$data['title'] = 'Edit Expense';
+			$data['expenseId'] = $params;
+			$data['expense'] = $this->model->getExpenseById('ID',$data['expenseId']);
+			$categoryController = new CategoryController;
+			$paymentMethodController = new PaymentMethodController;
+			$data['category'] = $categoryController->getCategory('ID',$data['expense']['CATEGORY_ID']);
+			$data['paymentMethod'] = $paymentMethodController->getPaymentMethod('ID',$data['expense']['PAYMENT_METHOD_ID']);
+			$this->view('expense/edit.expense',$data);
+		}
+		else{
+			$this->sendJsonResponse(['status' => 'error','message' => 'UnAuthorized Access']);
+		}
+	}
+
+	private function handleEditExpenseRequest($input){
+		$response = [];
+
+		$expenseId = $input['expenseId'];
+
 
 	}
 
